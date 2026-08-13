@@ -147,7 +147,7 @@ export default function CheckInPage() {
             <img src="/kps-logo.png" alt="KPS" className="logo-img" />
             <h1 className="event-name">KPS Secret Party</h1>
             <p className="welcome-text">Welcome</p>
-            <p className="sub">Please check in below</p>
+            <p className="sub" style={{ marginTop: 16 }}>Please check in below</p>
             <form onSubmit={handleSearch}>
               <div className="field-group" style={{ marginTop: 28 }}>
                 <input
@@ -357,7 +357,7 @@ export default function CheckInPage() {
 
         {screen === 'welcome' && (
           <>
-            <div className="welcome-icon" style={{ marginTop: 32 }}>
+            <div className="welcome-icon" style={{ marginTop: 16 }}>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -376,7 +376,7 @@ export default function CheckInPage() {
               <br />
               <span
                 className="script"
-                style={{ fontSize: 38, display: 'inline-block', padding: '10px 0' }}
+                style={{ fontSize: 38, display: 'inline-block', padding: '18px 0 10px' }}
               >
                 {welcomeName || 'Guest'}
               </span>
@@ -384,8 +384,7 @@ export default function CheckInPage() {
             <p className="sub" style={{ fontSize: 20 }}>
               Enjoy the party.
             </p>
-            <div className="spacer" />
-            <button className="btn btn-primary" onClick={resetAndReturn}>
+            <button className="btn btn-primary" style={{ marginTop: 32 }} onClick={resetAndReturn}>
               Done - next guest
             </button>
           </>
