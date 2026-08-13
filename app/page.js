@@ -147,7 +147,7 @@ export default function CheckInPage() {
             <img src="/kps-logo.png" alt="KPS" className="logo-img" />
             <h1 className="event-name">KPS Secret Party</h1>
             <p className="welcome-text">Welcome</p>
-            <p className="sub" style={{ marginTop: 16 }}>Please check in below</p>
+            <p className="sub" style={{ marginTop: 26 }}>Please check in below</p>
             <form onSubmit={handleSearch}>
               <div className="field-group" style={{ marginTop: 28 }}>
                 <input
@@ -203,15 +203,13 @@ export default function CheckInPage() {
 
         {screen === 'confirm' && (
           <>
-            <div className="brand-row">
-              <span className="kps">KPS</span>
-            </div>
-            <h1 className="headline" style={{ fontSize: 28 }}>
+            <img src="/kps-logo.png" alt="KPS" className="logo-img" />
+            <h1 className="headline" style={{ fontSize: 28, marginBottom: 18 }}>
               You&apos;re on
               <br />
               the list
             </h1>
-            <p className="sub">Check your details are correct</p>
+            <p className="sub">Please check your details are correct</p>
 
             {!showEdit && (
               <div className="card">
@@ -279,11 +277,11 @@ export default function CheckInPage() {
 
             <button
               className="btn btn-primary"
-              style={{ marginTop: 20 }}
+              style={{ marginTop: 36 }}
               onClick={handleConfirm}
               disabled={submitting}
             >
-              {submitting ? 'Checking in...' : 'Confirm and check in'}
+              {submitting ? 'Checking in...' : 'Check in'}
             </button>
             <button className="btn btn-ghost" onClick={() => setScreen('search')}>
               Back to search
@@ -357,7 +355,7 @@ export default function CheckInPage() {
 
         {screen === 'welcome' && (
           <>
-            <div className="welcome-icon" style={{ marginTop: 16 }}>
+            <div className="welcome-icon" style={{ marginTop: 0 }}>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -371,7 +369,7 @@ export default function CheckInPage() {
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
-            <h1 className="headline" style={{ fontSize: 30, marginTop: 8 }}>
+            <h1 className="headline" style={{ fontSize: 30, marginTop: 4 }}>
               Welcome,
               <br />
               <span
@@ -384,7 +382,7 @@ export default function CheckInPage() {
             <p className="sub" style={{ fontSize: 20 }}>
               Enjoy the party.
             </p>
-            <button className="btn btn-primary" style={{ marginTop: 32 }} onClick={resetAndReturn}>
+            <button className="btn btn-primary" style={{ marginTop: 60 }} onClick={resetAndReturn}>
               Done - next guest
             </button>
           </>
