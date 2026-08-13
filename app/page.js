@@ -147,10 +147,9 @@ export default function CheckInPage() {
             <img src="/kps-logo.png" alt="KPS" className="logo-img" />
             <h1 className="event-name">KPS Secret Party</h1>
             <p className="welcome-text">Welcome</p>
-            <p className="sub" style={{ marginTop: 26 }}>Please check in below</p>
-            <div className="spacer" />
+            <p className="sub" style={{ marginTop: 32 }}>Please check in below</p>
             <form onSubmit={handleSearch} style={{ display: 'contents' }}>
-              <div className="field-group">
+              <div className="field-group" style={{ marginTop: 36 }}>
                 <input
                   type="text"
                   id="search-input"
@@ -160,8 +159,7 @@ export default function CheckInPage() {
                 />
                 {searchError && <p className="error-text">{searchError}</p>}
               </div>
-              <div className="spacer" />
-              <button type="submit" className="btn btn-primary" disabled={submitting}>
+              <button type="submit" className="btn btn-primary" style={{ marginTop: 24 }} disabled={submitting}>
                 {submitting ? 'Searching...' : 'Find my invite'}
               </button>
             </form>
