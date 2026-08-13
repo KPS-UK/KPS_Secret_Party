@@ -193,7 +193,7 @@ export default function CheckInPage() {
               None of these are you?{' '}
               <span onClick={() => goToNewGuest(searchValue)}>Register here</span>
             </p>
-            <button className="btn btn-ghost" style={{ marginTop: 28 }} onClick={() => setScreen('search')}>
+            <button className="btn btn-ghost" style={{ marginTop: 'auto' }} onClick={() => setScreen('search')}>
               Back to search
             </button>
           </>
@@ -275,7 +275,7 @@ export default function CheckInPage() {
 
             <button
               className="btn btn-primary"
-              style={{ marginTop: 28 }}
+              style={{ marginTop: 'auto' }}
               onClick={handleConfirm}
               disabled={submitting}
             >
@@ -337,7 +337,7 @@ export default function CheckInPage() {
             {formError && <p className="error-text">{formError}</p>}
             <button
               className="btn btn-primary"
-              style={{ marginTop: 28 }}
+              style={{ marginTop: 'auto' }}
               onClick={handleRegister}
               disabled={submitting}
             >
@@ -378,7 +378,7 @@ export default function CheckInPage() {
             <p className="sub" style={{ fontSize: 20 }}>
               Enjoy the party.
             </p>
-            <button className="btn btn-primary" style={{ marginTop: 32 }} onClick={resetAndReturn}>
+            <button className="btn btn-primary" style={{ marginTop: 'auto' }} onClick={resetAndReturn}>
               Done - next guest
             </button>
           </>
