@@ -1,0 +1,338 @@
+:root {
+  --navy: #0a0d2e;
+  --navy-deep: #050714;
+  --purple: #2c1163;
+  --magenta: #c93bd6;
+  --magenta-soft: #e06fe8;
+  --cyan: #3bd6c9;
+  --white: #ffffff;
+  --muted: rgba(255, 255, 255, 0.68);
+  --muted-2: rgba(255, 255, 255, 0.4);
+  --card-bg: rgba(20, 16, 52, 0.55);
+  --card-border: rgba(255, 255, 255, 0.14);
+  --input-bg: rgba(255, 255, 255, 0.08);
+  --radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at 50% 15%, rgba(201, 59, 214, 0.35), transparent 45%),
+    radial-gradient(circle at 20% 80%, rgba(59, 214, 201, 0.12), transparent 40%),
+    linear-gradient(180deg, var(--navy-deep) 0%, var(--purple) 45%, var(--navy-deep) 100%);
+  color: var(--white);
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.phone {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  min-height: 100vh;
+  padding: 56px 26px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.rays {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image: repeating-conic-gradient(from 0deg at 50% 8%, rgba(255, 255, 255, 0.05) 0deg 2deg, transparent 2deg 14deg),
+    radial-gradient(circle at 50% 0%, rgba(201, 59, 214, 0.4), transparent 55%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.dots {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.35) 1px, transparent 1.5px);
+  background-size: 16px 16px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.brand-row {
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.brand-row .kps {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: 4px;
+  font-size: 13px;
+  color: var(--white);
+  opacity: 0.9;
+}
+
+h1.headline {
+  font-family: 'Anton', sans-serif;
+  font-size: 40px;
+  line-height: 1.05;
+  color: var(--white);
+  text-align: center;
+  text-transform: uppercase;
+  margin: 10px 0 4px;
+  letter-spacing: 1px;
+}
+
+.script {
+  font-family: 'Playball', cursive;
+  color: var(--magenta-soft);
+  font-size: 34px;
+  display: block;
+  line-height: 1;
+}
+
+p.sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  margin: 6px 0 0;
+  line-height: 1.5;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.field-group {
+  margin-bottom: 14px;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'] {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--input-bg);
+  color: var(--white);
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+}
+
+input::placeholder {
+  color: var(--muted-2);
+}
+
+input:focus {
+  border-color: var(--cyan);
+}
+
+.btn {
+  border: none;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--magenta), #8b3bd6);
+  color: var(--white);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--white);
+  margin-top: 10px;
+}
+
+.error-text {
+  color: #ff9b9b;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.helper-link {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 18px;
+}
+
+.helper-link span {
+  color: var(--cyan);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-top: 6px;
+}
+
+.card .name {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0 0 2px;
+}
+
+.card .role {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 8px 0;
+  border-top: 1px solid var(--card-border);
+}
+
+.kv span:first-child {
+  color: var(--muted);
+}
+
+.kv span:last-child {
+  color: var(--white);
+}
+
+.edit-toggle {
+  text-align: center;
+  font-size: 13px;
+  color: var(--cyan);
+  margin-top: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.match-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.match-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.match-item:hover {
+  border-color: var(--cyan);
+}
+
+.match-item .name {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.match-item .meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 2px 0 0;
+}
+
+.welcome-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(59, 214, 201, 0.15);
+  border: 1px solid var(--cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+}
+
+.badge {
+  display: inline-block;
+  margin: 16px auto 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--card-border);
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.badge-row {
+  text-align: center;
+}
+
+.admin-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  max-width: 420px;
+  width: 100%;
+}
+
+.admin-card h2 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+
+.admin-summary {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+.admin-summary .error-line {
+  color: #ff9b9b;
+}
+
+.file-input {
+  width: 100%;
+  padding: 10px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
