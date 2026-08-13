@@ -193,8 +193,7 @@ export default function CheckInPage() {
               None of these are you?{' '}
               <span onClick={() => goToNewGuest(searchValue)}>Register here</span>
             </p>
-            <div className="spacer" />
-            <button className="btn btn-ghost" onClick={() => setScreen('search')}>
+            <button className="btn btn-ghost" style={{ marginTop: 28 }} onClick={() => setScreen('search')}>
               Back to search
             </button>
           </>
@@ -274,15 +273,15 @@ export default function CheckInPage() {
 
             {formError && <p className="error-text">{formError}</p>}
 
-            <div className="spacer" />
             <button
               className="btn btn-primary"
+              style={{ marginTop: 28 }}
               onClick={handleConfirm}
               disabled={submitting}
             >
               {submitting ? 'Checking in...' : 'Check in'}
             </button>
-            <button className="btn btn-ghost" onClick={() => setScreen('search')}>
+            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setScreen('search')}>
               Back to search
             </button>
           </>
@@ -336,15 +335,15 @@ export default function CheckInPage() {
               />
             </div>
             {formError && <p className="error-text">{formError}</p>}
-            <div className="spacer" />
             <button
               className="btn btn-primary"
+              style={{ marginTop: 28 }}
               onClick={handleRegister}
               disabled={submitting}
             >
               {submitting ? 'Registering...' : 'Register and check in'}
             </button>
-            <button className="btn btn-ghost" onClick={() => setScreen('search')}>
+            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setScreen('search')}>
               Back to search
             </button>
           </>
@@ -379,8 +378,7 @@ export default function CheckInPage() {
             <p className="sub" style={{ fontSize: 20 }}>
               Enjoy the party.
             </p>
-            <div className="spacer" />
-            <button className="btn btn-primary" onClick={resetAndReturn}>
+            <button className="btn btn-primary" style={{ marginTop: 32 }} onClick={resetAndReturn}>
               Done - next guest
             </button>
           </>
