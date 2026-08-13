@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const EMPTY_FORM = { id: null, name: '', email: '', role: '', organisation: '' };
 
@@ -14,6 +14,14 @@ export default function CheckInPage() {
   const [formError, setFormError] = useState('');
   const [welcomeName, setWelcomeName] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (screen !== 'welcome') return;
+    const timer = setTimeout(() => {
+      resetAndReturn();
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [screen]);
 
   async function handleSearch(event) {
     event.preventDefault();
@@ -139,7 +147,7 @@ export default function CheckInPage() {
             <img src="/kps-logo.png" alt="KPS" className="logo-img" />
             <h1 className="event-name">KPS Secret Party</h1>
             <p className="welcome-text">Welcome</p>
-            <p className="checkin-line">Please check in below</p>
+            <p className="sub">Please check in below</p>
             <form onSubmit={handleSearch}>
               <div className="field-group" style={{ marginTop: 28 }}>
                 <input
@@ -349,8 +357,7 @@ export default function CheckInPage() {
 
         {screen === 'welcome' && (
           <>
-            <div className="spacer" />
-            <div className="welcome-icon">
+            <div className="welcome-icon" style={{ marginTop: 32 }}>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -364,17 +371,19 @@ export default function CheckInPage() {
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
-            <h1 className="headline" style={{ fontSize: 30 }}>
+            <h1 className="headline" style={{ fontSize: 30, marginTop: 8 }}>
               Welcome,
               <br />
-              <span className="script" style={{ fontSize: 38 }}>
+              <span
+                className="script"
+                style={{ fontSize: 38, display: 'inline-block', padding: '10px 0' }}
+              >
                 {welcomeName || 'Guest'}
               </span>
             </h1>
-            <p className="sub">You&apos;re checked in. Enjoy the party.</p>
-            <div className="badge-row">
-              <span className="badge">More on the night: photos, timings and playlist land here</span>
-            </div>
+            <p className="sub" style={{ fontSize: 20 }}>
+              Enjoy the party.
+            </p>
             <div className="spacer" />
             <button className="btn btn-primary" onClick={resetAndReturn}>
               Done - next guest
