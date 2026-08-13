@@ -148,8 +148,9 @@ export default function CheckInPage() {
             <h1 className="event-name">KPS Secret Party</h1>
             <p className="welcome-text">Welcome</p>
             <p className="sub" style={{ marginTop: 26 }}>Please check in below</p>
-            <form onSubmit={handleSearch}>
-              <div className="field-group" style={{ marginTop: 28 }}>
+            <div className="spacer" />
+            <form onSubmit={handleSearch} style={{ display: 'contents' }}>
+              <div className="field-group">
                 <input
                   type="text"
                   id="search-input"
@@ -159,11 +160,11 @@ export default function CheckInPage() {
                 />
                 {searchError && <p className="error-text">{searchError}</p>}
               </div>
+              <div className="spacer" />
               <button type="submit" className="btn btn-primary" disabled={submitting}>
                 {submitting ? 'Searching...' : 'Find my invite'}
               </button>
             </form>
-            <div className="spacer" />
           </>
         )}
 
@@ -203,7 +204,7 @@ export default function CheckInPage() {
 
         {screen === 'confirm' && (
           <>
-            <img src="/kps-logo.png" alt="KPS" className="logo-img" />
+            <img src="/kps-logo.png" alt="KPS" className="logo-img" style={{ marginBottom: 26 }} />
             <h1 className="headline" style={{ fontSize: 28, marginBottom: 18 }}>
               You&apos;re on
               <br />
@@ -275,9 +276,9 @@ export default function CheckInPage() {
 
             {formError && <p className="error-text">{formError}</p>}
 
+            <div className="spacer" />
             <button
               className="btn btn-primary"
-              style={{ marginTop: 36 }}
               onClick={handleConfirm}
               disabled={submitting}
             >
@@ -286,7 +287,6 @@ export default function CheckInPage() {
             <button className="btn btn-ghost" onClick={() => setScreen('search')}>
               Back to search
             </button>
-            <div className="spacer" />
           </>
         )}
 
@@ -338,9 +338,9 @@ export default function CheckInPage() {
               />
             </div>
             {formError && <p className="error-text">{formError}</p>}
+            <div className="spacer" />
             <button
               className="btn btn-primary"
-              style={{ marginTop: 8 }}
               onClick={handleRegister}
               disabled={submitting}
             >
@@ -349,13 +349,12 @@ export default function CheckInPage() {
             <button className="btn btn-ghost" onClick={() => setScreen('search')}>
               Back to search
             </button>
-            <div className="spacer" />
           </>
         )}
 
         {screen === 'welcome' && (
           <>
-            <div className="welcome-icon" style={{ marginTop: 0 }}>
+            <div className="welcome-icon" style={{ marginTop: 0, marginBottom: 26 }}>
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -369,7 +368,7 @@ export default function CheckInPage() {
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
-            <h1 className="headline" style={{ fontSize: 30, marginTop: 4 }}>
+            <h1 className="headline" style={{ fontSize: 30 }}>
               Welcome,
               <br />
               <span
@@ -382,7 +381,8 @@ export default function CheckInPage() {
             <p className="sub" style={{ fontSize: 20 }}>
               Enjoy the party.
             </p>
-            <button className="btn btn-primary" style={{ marginTop: 60 }} onClick={resetAndReturn}>
+            <div className="spacer" />
+            <button className="btn btn-primary" onClick={resetAndReturn}>
               Done - next guest
             </button>
           </>
