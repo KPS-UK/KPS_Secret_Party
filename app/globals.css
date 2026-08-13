@@ -82,6 +82,41 @@ body {
   opacity: 0.9;
 }
 
+.logo-img {
+  display: block;
+  width: 84px;
+  height: auto;
+  margin: 0 auto 14px;
+}
+
+.event-name {
+  font-family: 'Anton', sans-serif;
+  font-size: 26px;
+  line-height: 1.1;
+  color: var(--white);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 6px;
+}
+
+.welcome-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--white);
+  text-align: center;
+  margin: 0 0 4px;
+}
+
+.checkin-line {
+  font-family: 'Playball', cursive;
+  font-size: 20px;
+  color: var(--muted);
+  text-align: center;
+  margin: 18px 0 0;
+}
+
 h1.headline {
   font-family: 'Anton', sans-serif;
   font-size: 40px;

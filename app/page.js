@@ -136,22 +136,16 @@ export default function CheckInPage() {
       <div className="phone">
         {screen === 'search' && (
           <>
-            <div className="brand-row">
-              <span className="kps">KPS</span>
-            </div>
-            <h1 className="headline">
-              Welcome to
-              <br />
-              Secret <span className="script">Party</span>
-            </h1>
-            <p className="sub">Please check in below</p>
+            <img src="/kps-logo.png" alt="KPS" className="logo-img" />
+            <h1 className="event-name">KPS Secret Party</h1>
+            <p className="welcome-text">Welcome</p>
+            <p className="checkin-line">Please check in below</p>
             <form onSubmit={handleSearch}>
               <div className="field-group" style={{ marginTop: 28 }}>
-                <label htmlFor="search-input">Find your invite</label>
                 <input
                   type="text"
                   id="search-input"
-                  placeholder="Type your name"
+                  placeholder="Name"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                 />
@@ -161,10 +155,6 @@ export default function CheckInPage() {
                 {submitting ? 'Searching...' : 'Find my invite'}
               </button>
             </form>
-            <p className="helper-link">
-              Can&apos;t find your invite?{' '}
-              <span onClick={() => goToNewGuest('')}>Register here</span>
-            </p>
             <div className="spacer" />
           </>
         )}
