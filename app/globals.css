@@ -33,9 +33,9 @@ body {
 .page {
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 40px 16px;
+  padding: 0 16px;
 }
 
 .phone {
@@ -43,7 +43,7 @@ body {
   width: 100%;
   max-width: 420px;
   min-height: 100vh;
-  padding: 56px 26px 40px;
+  padding: 20px 26px 40px;
   display: flex;
   flex-direction: column;
 }
