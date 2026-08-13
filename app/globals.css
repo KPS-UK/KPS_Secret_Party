@@ -90,20 +90,24 @@ body {
 }
 
 .event-name {
-  font-family: 'Anton', sans-serif;
-  font-size: 26px;
-  line-height: 1.1;
-  color: var(--white);
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.2;
   text-align: center;
-  text-transform: uppercase;
   letter-spacing: 1px;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
+  background: linear-gradient(180deg, #ffe27a 0%, #ff7ac9 50%, #a35bff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .welcome-text {
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
   font-size: 18px;
+  letter-spacing: 1px;
   color: var(--white);
   text-align: center;
   margin: 0 0 4px;
