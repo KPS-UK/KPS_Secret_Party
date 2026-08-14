@@ -8,12 +8,12 @@ export default function CheckInPage() {
   const [screen, setScreen] = useState('search');
   const [searchValue, setSearchValue] = useState('');
   const [searchError, setSearchError] = useState('');
-  const [matches, setMatches] = useState([]);
   const [form, setForm] = useState(EMPTY_FORM);
   const [showEdit, setShowEdit] = useState(false);
   const [formError, setFormError] = useState('');
   const [welcomeName, setWelcomeName] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [matches, setMatches] = useState([]);
 
   useEffect(() => {
     if (screen !== 'welcome') return;
@@ -143,12 +143,12 @@ export default function CheckInPage() {
       <div className="dots" />
       <div className="phone">
         {screen === 'search' && (
-          <>
-            <img src="/kps-logo.png" alt="KPS" className="logo-img" />
-            <h1 className="event-name">KPS Secret Party</h1>
-            <p className="welcome-text">Welcome</p>
-            <p className="sub" style={{ marginTop: 32 }}>Please check in below</p>
-            <form onSubmit={handleSearch} style={{ display: 'contents' }}>
+          <form onSubmit={handleSearch} style={{ display: 'contents' }}>
+            <div className="screen-body">
+              <img src="/kps-logo.png" alt="KPS" className="logo-img" />
+              <h1 className="event-name">KPS Secret Party</h1>
+              <p className="welcome-text">Welcome</p>
+              <p className="sub" style={{ marginTop: 32 }}>Please check in below</p>
               <div className="field-group" style={{ marginTop: 36 }}>
                 <input
                   type="text"
@@ -159,228 +159,243 @@ export default function CheckInPage() {
                 />
                 {searchError && <p className="error-text">{searchError}</p>}
               </div>
-              <button type="submit" className="btn btn-primary" style={{ marginTop: 24 }} disabled={submitting}>
+            </div>
+            <div className="screen-footer">
+              <button type="submit" className="btn btn-primary" disabled={submitting}>
                 {submitting ? 'Searching...' : 'Find my invite'}
               </button>
-            </form>
-          </>
+            </div>
+          </form>
         )}
 
         {screen === 'matches' && (
           <>
-            <div className="brand-row">
-              <span className="kps">KPS</span>
+            <div className="screen-body">
+              <div className="brand-row">
+                <span className="kps">KPS</span>
+              </div>
+              <h1 className="headline" style={{ fontSize: 28 }}>
+                A few names
+                <br />
+                match
+              </h1>
+              <p className="sub">Tap yours to continue</p>
+              <div className="match-list">
+                {matches.map((guest) => (
+                  <button key={guest.id} className="match-item" onClick={() => selectMatch(guest)}>
+                    <p className="name">{guest.name}</p>
+                    <p className="meta">
+                      {guest.role}
+                      {guest.role && guest.organisation ? ' at ' : ''}
+                      {guest.organisation}
+                    </p>
+                  </button>
+                ))}
+              </div>
+              <p className="helper-link">
+                None of these are you?{' '}
+                <span onClick={() => goToNewGuest(searchValue)}>Register here</span>
+              </p>
             </div>
-            <h1 className="headline" style={{ fontSize: 28 }}>
-              A few names
-              <br />
-              match
-            </h1>
-            <p className="sub">Tap yours to continue</p>
-            <div className="match-list">
-              {matches.map((guest) => (
-                <button key={guest.id} className="match-item" onClick={() => selectMatch(guest)}>
-                  <p className="name">{guest.name}</p>
-                  <p className="meta">
-                    {guest.role}
-                    {guest.role && guest.organisation ? ' at ' : ''}
-                    {guest.organisation}
-                  </p>
-                </button>
-              ))}
+            <div className="screen-footer">
+              <button className="btn btn-ghost" style={{ marginTop: 0 }} onClick={() => setScreen('search')}>
+                Back to search
+              </button>
             </div>
-            <p className="helper-link">
-              None of these are you?{' '}
-              <span onClick={() => goToNewGuest(searchValue)}>Register here</span>
-            </p>
-            <button className="btn btn-ghost" style={{ marginTop: 'auto' }} onClick={() => setScreen('search')}>
-              Back to search
-            </button>
           </>
         )}
 
         {screen === 'confirm' && (
           <>
-            <img src="/kps-logo.png" alt="KPS" className="logo-img" style={{ marginBottom: 26 }} />
-            <h1 className="headline" style={{ fontSize: 28, marginBottom: 18 }}>
-              You&apos;re on
-              <br />
-              the list
-            </h1>
-            <p className="sub">Please check your details are correct</p>
+            <div className="screen-body">
+              <img src="/kps-logo.png" alt="KPS" className="logo-img" style={{ marginBottom: 26 }} />
+              <h1 className="headline" style={{ fontSize: 28, marginBottom: 18 }}>
+                You&apos;re on
+                <br />
+                the list
+              </h1>
+              <p className="sub">Please check your details are correct</p>
 
-            {!showEdit && (
-              <div className="card">
-                <p className="name">{form.name}</p>
-                <p className="role">
-                  {form.role}
-                  {form.role && form.organisation ? ' at ' : ''}
-                  {form.organisation}
+              {!showEdit && (
+                <div className="card">
+                  <p className="name">{form.name}</p>
+                  <p className="role">
+                    {form.role}
+                    {form.role && form.organisation ? ' at ' : ''}
+                    {form.organisation}
+                  </p>
+                  <div className="kv">
+                    <span>Email</span>
+                    <span>{form.email}</span>
+                  </div>
+                  <div className="kv">
+                    <span>Organisation</span>
+                    <span>{form.organisation}</span>
+                  </div>
+                </div>
+              )}
+
+              {!showEdit && (
+                <p className="edit-toggle" onClick={() => setShowEdit(true)}>
+                  Edit my details
                 </p>
-                <div className="kv">
-                  <span>Email</span>
-                  <span>{form.email}</span>
-                </div>
-                <div className="kv">
-                  <span>Organisation</span>
-                  <span>{form.organisation}</span>
-                </div>
-              </div>
-            )}
+              )}
 
-            {!showEdit && (
-              <p className="edit-toggle" onClick={() => setShowEdit(true)}>
-                Edit my details
-              </p>
-            )}
+              {showEdit && (
+                <>
+                  <div className="field-group">
+                    <label>Name</label>
+                    <input
+                      type="text"
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label>Email address</label>
+                    <input
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label>Role</label>
+                    <input
+                      type="text"
+                      value={form.role}
+                      onChange={(e) => setForm({ ...form, role: e.target.value })}
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label>Organisation</label>
+                    <input
+                      type="text"
+                      value={form.organisation}
+                      onChange={(e) => setForm({ ...form, organisation: e.target.value })}
+                    />
+                  </div>
+                </>
+              )}
 
-            {showEdit && (
-              <>
-                <div className="field-group">
-                  <label>Name</label>
-                  <input
-                    type="text"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  />
-                </div>
-                <div className="field-group">
-                  <label>Email address</label>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  />
-                </div>
-                <div className="field-group">
-                  <label>Role</label>
-                  <input
-                    type="text"
-                    value={form.role}
-                    onChange={(e) => setForm({ ...form, role: e.target.value })}
-                  />
-                </div>
-                <div className="field-group">
-                  <label>Organisation</label>
-                  <input
-                    type="text"
-                    value={form.organisation}
-                    onChange={(e) => setForm({ ...form, organisation: e.target.value })}
-                  />
-                </div>
-              </>
-            )}
-
-            {formError && <p className="error-text">{formError}</p>}
-
-            <button
-              className="btn btn-primary"
-              style={{ marginTop: 'auto' }}
-              onClick={handleConfirm}
-              disabled={submitting}
-            >
-              {submitting ? 'Checking in...' : 'Check in'}
-            </button>
-            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setScreen('search')}>
-              Back to search
-            </button>
+              {formError && <p className="error-text">{formError}</p>}
+            </div>
+            <div className="screen-footer">
+              <button
+                className="btn btn-primary"
+                onClick={handleConfirm}
+                disabled={submitting}
+              >
+                {submitting ? 'Checking in...' : 'Check in'}
+              </button>
+              <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setScreen('search')}>
+                Back to search
+              </button>
+            </div>
           </>
         )}
 
         {screen === 'new' && (
           <>
-            <div className="brand-row">
-              <span className="kps">KPS</span>
+            <div className="screen-body">
+              <div className="brand-row">
+                <span className="kps">KPS</span>
+              </div>
+              <h1 className="headline" style={{ fontSize: 26 }}>
+                Let&apos;s get you
+                <br />
+                on the list
+              </h1>
+              <p className="sub">We couldn&apos;t find a pre-registration, add your details below</p>
+              <div className="field-group">
+                <label>Name</label>
+                <input
+                  type="text"
+                  placeholder="Full name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+              </div>
+              <div className="field-group">
+                <label>Email address</label>
+                <input
+                  type="email"
+                  placeholder="name@company.com"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+              </div>
+              <div className="field-group">
+                <label>Role</label>
+                <input
+                  type="text"
+                  placeholder="Your job title"
+                  value={form.role}
+                  onChange={(e) => setForm({ ...form, role: e.target.value })}
+                />
+              </div>
+              <div className="field-group">
+                <label>Organisation</label>
+                <input
+                  type="text"
+                  placeholder="Company name"
+                  value={form.organisation}
+                  onChange={(e) => setForm({ ...form, organisation: e.target.value })}
+                />
+              </div>
+              {formError && <p className="error-text">{formError}</p>}
             </div>
-            <h1 className="headline" style={{ fontSize: 26 }}>
-              Let&apos;s get you
-              <br />
-              on the list
-            </h1>
-            <p className="sub">We couldn&apos;t find a pre-registration, add your details below</p>
-            <div className="field-group">
-              <label>Name</label>
-              <input
-                type="text"
-                placeholder="Full name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-              />
+            <div className="screen-footer">
+              <button
+                className="btn btn-primary"
+                onClick={handleRegister}
+                disabled={submitting}
+              >
+                {submitting ? 'Registering...' : 'Register and check in'}
+              </button>
+              <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setScreen('search')}>
+                Back to search
+              </button>
             </div>
-            <div className="field-group">
-              <label>Email address</label>
-              <input
-                type="email"
-                placeholder="name@company.com"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-              />
-            </div>
-            <div className="field-group">
-              <label>Role</label>
-              <input
-                type="text"
-                placeholder="Your job title"
-                value={form.role}
-                onChange={(e) => setForm({ ...form, role: e.target.value })}
-              />
-            </div>
-            <div className="field-group">
-              <label>Organisation</label>
-              <input
-                type="text"
-                placeholder="Company name"
-                value={form.organisation}
-                onChange={(e) => setForm({ ...form, organisation: e.target.value })}
-              />
-            </div>
-            {formError && <p className="error-text">{formError}</p>}
-            <button
-              className="btn btn-primary"
-              style={{ marginTop: 'auto' }}
-              onClick={handleRegister}
-              disabled={submitting}
-            >
-              {submitting ? 'Registering...' : 'Register and check in'}
-            </button>
-            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setScreen('search')}>
-              Back to search
-            </button>
           </>
         )}
 
         {screen === 'welcome' && (
           <>
-            <div className="welcome-icon" style={{ marginTop: 0, marginBottom: 26 }}>
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#3bd6c9"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                width="32"
-                height="32"
-              >
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
+            <div className="screen-body">
+              <div className="welcome-icon" style={{ marginTop: 0, marginBottom: 26 }}>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#3bd6c9"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  width="32"
+                  height="32"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <h1 className="headline" style={{ fontSize: 30 }}>
+                Welcome,
+                <br />
+                <span
+                  className="script"
+                  style={{ fontSize: 38, display: 'inline-block', padding: '18px 0 10px' }}
+                >
+                  {welcomeName || 'Guest'}
+                </span>
+              </h1>
+              <p className="sub" style={{ fontSize: 20 }}>
+                Enjoy the party.
+              </p>
             </div>
-            <h1 className="headline" style={{ fontSize: 30 }}>
-              Welcome,
-              <br />
-              <span
-                className="script"
-                style={{ fontSize: 38, display: 'inline-block', padding: '18px 0 10px' }}
-              >
-                {welcomeName || 'Guest'}
-              </span>
-            </h1>
-            <p className="sub" style={{ fontSize: 20 }}>
-              Enjoy the party.
-            </p>
-            <button className="btn btn-primary" style={{ marginTop: 'auto' }} onClick={resetAndReturn}>
-              Done - next guest
-            </button>
+            <div className="screen-footer">
+              <button className="btn btn-primary" onClick={resetAndReturn}>
+                Done - next guest
+              </button>
+            </div>
           </>
         )}
       </div>
