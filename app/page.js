@@ -171,15 +171,13 @@ export default function CheckInPage() {
         {screen === 'matches' && (
           <>
             <div className="screen-body">
-              <div className="brand-row">
-                <span className="kps">KPS</span>
-              </div>
+              <img src="/kps-logo.png" alt="KPS" className="logo-img" style={{ marginBottom: 18 }} />
               <h1 className="headline" style={{ fontSize: 28 }}>
                 A few names
                 <br />
                 match
               </h1>
-              <p className="sub">Tap yours to continue</p>
+              <p className="sub" style={{ marginBottom: 20 }}>Tap yours to continue</p>
               <div className="match-list">
                 {matches.map((guest) => (
                   <button key={guest.id} className="match-item" onClick={() => selectMatch(guest)}>
