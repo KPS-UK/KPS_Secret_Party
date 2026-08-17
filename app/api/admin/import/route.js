@@ -3,14 +3,28 @@ import * as XLSX from 'xlsx';
 import { getDb } from '../../../../lib/db';
 import { isAdminRequest } from '../../../../lib/auth';
 
-const REQUIRED_COLUMNS = ['name', 'email', 'role', 'organisation'];
+const REQUIRED_COLUMNS = ['first name', 'last name', 'company name', 'email'];
+
+function normaliseKey(key) {
+  return key
+    .replace(/[\u2018\u2019]/g, "'") // curly single quotes -> straight, so "Can't Attend" matches however Excel saved it
+    .trim()
+    .toLowerCase();
+}
 
 function normaliseRow(row) {
   const result = {};
   for (const key of Object.keys(row)) {
-    result[key.trim().toLowerCase()] = row[key];
+    result[normaliseKey(key)] = row[key];
   }
   return result;
+}
+
+// Treat any non-blank, non-"0"/"false"/"no" cell as a cross/tick mark.
+function isMarked(value) {
+  if (value === undefined || value === null) return false;
+  const v = String(value).trim().toLowerCase();
+  return v !== '' && v !== '0' && v !== 'false' && v !== 'no';
 }
 
 export async function POST(request) {
@@ -45,30 +59,55 @@ export async function POST(request) {
       continue;
     }
 
-    const name = String(normalised.name).trim();
+    const firstName = String(normalised['first name']).trim();
+    const lastName = String(normalised['last name']).trim();
+    const name = [firstName, lastName].filter(Boolean).join(' ').trim();
     const email = String(normalised.email).trim();
 
     if (!name || !email) {
-      errors.push(`Row ${i + 2}: name and email are required`);
+      errors.push(`Row ${i + 2}: first name/last name and email are required`);
       continue;
     }
 
-    const role = String(normalised.role || '').trim();
-    const organisation = String(normalised.organisation || '').trim();
+    const role = String(normalised['job title'] || '').trim();
+    const organisation = String(normalised['company name'] || '').trim();
+    const contactOwner = String(normalised['contact owner'] || '').trim();
+    const recordIdCompany = String(normalised['record id - company'] || '').trim();
+    const companyOwner = String(normalised['company owner'] || '').trim();
+
+    let rsvpStatus = null;
+    if (isMarked(normalised['attending'])) {
+      rsvpStatus = 'attending';
+    } else if (isMarked(normalised["can't attend"])) {
+      rsvpStatus = 'not_attending';
+    }
 
     const existing = await sql`SELECT id FROM guests WHERE LOWER(email) = LOWER(${email}) LIMIT 1`;
 
     if (existing.length) {
       await sql`
         UPDATE guests
-        SET name = ${name}, role = ${role}, organisation = ${organisation}, updated_at = now()
+        SET name = ${name},
+            role = ${role},
+            organisation = ${organisation},
+            contact_owner = ${contactOwner},
+            record_id_company = ${recordIdCompany},
+            company_owner = ${companyOwner},
+            rsvp_status = ${rsvpStatus},
+            updated_at = now()
         WHERE id = ${existing[0].id}
       `;
       updated += 1;
     } else {
       await sql`
-        INSERT INTO guests (name, email, role, organisation, source)
-        VALUES (${name}, ${email}, ${role}, ${organisation}, 'import')
+        INSERT INTO guests (
+          name, email, role, organisation,
+          contact_owner, record_id_company, company_owner, rsvp_status, source
+        )
+        VALUES (
+          ${name}, ${email}, ${role}, ${organisation},
+          ${contactOwner}, ${recordIdCompany}, ${companyOwner}, ${rsvpStatus}, 'import'
+        )
       `;
       added += 1;
     }
