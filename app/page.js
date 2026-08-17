@@ -8,6 +8,8 @@ export default function CheckInPage() {
   const [screen, setScreen] = useState('search');
   const [searchValue, setSearchValue] = useState('');
   const [searchError, setSearchError] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [showEdit, setShowEdit] = useState(false);
   const [formError, setFormError] = useState('');
@@ -23,6 +25,32 @@ export default function CheckInPage() {
     return () => clearTimeout(timer);
   }, [screen]);
 
+  // Suggest matching names as the person types, so they can tap a result
+  // instead of typing their full name and hitting submit.
+  useEffect(() => {
+    const value = searchValue.trim();
+    if (value.length < 2) {
+      setSuggestions([]);
+      return;
+    }
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/guests/search?q=${encodeURIComponent(value)}`);
+        const data = await response.json();
+        if (!cancelled) {
+          setSuggestions(data.results || []);
+        }
+      } catch (err) {
+        if (!cancelled) setSuggestions([]);
+      }
+    }, 250);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [searchValue]);
+
   async function handleSearch(event) {
     event.preventDefault();
     const value = searchValue.trim();
@@ -32,6 +60,7 @@ export default function CheckInPage() {
     }
     setSearchError('');
     setSubmitting(true);
+    setShowSuggestions(false);
     try {
       const response = await fetch(`/api/guests/search?q=${encodeURIComponent(value)}`);
       const data = await response.json();
@@ -63,6 +92,8 @@ export default function CheckInPage() {
       organisation: guest.organisation,
     });
     setShowEdit(false);
+    setSuggestions([]);
+    setShowSuggestions(false);
     setScreen('confirm');
   }
 
@@ -149,15 +180,38 @@ export default function CheckInPage() {
               <h1 className="event-name">KPS Secret Party</h1>
               <p className="welcome-text">Welcome</p>
               <p className="sub" style={{ marginTop: 32 }}>Please check in below</p>
-              <div className="field-group" style={{ marginTop: 36 }}>
+              <div className="field-group" style={{ marginTop: 36, position: 'relative' }}>
                 <input
                   type="text"
                   id="search-input"
                   placeholder="Name"
+                  autoComplete="off"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setShowSuggestions(false)}
                 />
                 {searchError && <p className="error-text">{searchError}</p>}
+                {showSuggestions && suggestions.length > 0 && (
+                  <div className="suggestion-list">
+                    {suggestions.map((guest) => (
+                      <button
+                        key={guest.id}
+                        type="button"
+                        className="suggestion-item"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => selectMatch(guest)}
+                      >
+                        <p className="name">{guest.name}</p>
+                        <p className="meta">
+                          {guest.role}
+                          {guest.role && guest.organisation ? ' at ' : ''}
+                          {guest.organisation}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             <div className="screen-footer">

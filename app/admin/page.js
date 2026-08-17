@@ -9,7 +9,7 @@ export default async function AdminPage() {
   const authed = Boolean(token) && token === getSessionToken();
 
   return (
-    <div className="page" style={{ alignItems: 'flex-start', paddingTop: 60 }}>
+    <div className="page-scroll" style={{ alignItems: 'flex-start', paddingTop: 60 }}>
       <div className="rays" />
       <div className="dots" />
       <div

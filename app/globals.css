@@ -42,6 +42,20 @@ body {
   overflow: hidden;
 }
 
+/* Same background/centering as .page, but allows the page to grow and
+   scroll normally. Use this for content whose length isn't fixed to one
+   screen, e.g. the admin dashboard, rather than the check-in flow's
+   fixed-height screens. */
+.page-scroll {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .phone {
   position: relative;
   width: 100%;
@@ -332,6 +346,52 @@ input:focus {
 
 .match-item .meta {
   font-size: 12px;
+  color: var(--muted);
+  margin: 2px 0 0;
+}
+
+.suggestion-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 10px;
+  background: var(--navy-deep);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+.suggestion-item {
+  background: var(--card-bg);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.suggestion-item:hover,
+.suggestion-item:focus {
+  border-color: var(--cyan);
+}
+
+.suggestion-item .name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--white);
+}
+
+.suggestion-item .meta {
+  font-size: 11px;
   color: var(--muted);
   margin: 2px 0 0;
 }

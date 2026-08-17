@@ -82,69 +82,9 @@ export default function AdminDashboard() {
 
   return (
     <>
-      <form onSubmit={handleImport} className="admin-card">
-        <h2>Import guest list</h2>
-        <p className="sub" style={{ textAlign: 'left', marginBottom: 12 }}>
-          Upload an excel file with columns: First Name, Last Name, Company Name, Email, Job Title.
-          Contact owner, Record ID - Company, Company owner, Attending and Can&apos;t Attend are
-          optional and will be saved if present.
-        </p>
-        <input
-          type="file"
-          accept=".xlsx,.xls"
-          className="file-input"
-          onChange={(e) => setFile(e.target.files[0] || null)}
-        />
-        {importError && <p className="error-text">{importError}</p>}
-        <button
-          type="submit"
-          className="btn btn-primary"
-          style={{ marginTop: 12 }}
-          disabled={importing}
-        >
-          {importing ? 'Importing...' : 'Import file'}
-        </button>
-        {importResult && (
-          <div className="admin-summary">
-            <p>
-              {importResult.added} added, {importResult.updated} updated, out of{' '}
-              {importResult.totalRows} rows.
-            </p>
-            {importResult.errors.length > 0 && (
-              <div>
-                <p className="error-line">{importResult.errors.length} row(s) had a problem:</p>
-                {importResult.errors.slice(0, 5).map((e, i) => (
-                  <p key={i} className="error-line">
-                    {e}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </form>
-
       <div className="admin-card">
-        <h2>Export guest list</h2>
-        <p className="sub" style={{ textAlign: 'left', marginBottom: 12 }}>
-          Download everyone on the list, including who has checked in.
-        </p>
-        <a
-          href="/api/admin/export"
-          className="btn btn-primary"
-          style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}
-        >
-          Download excel file
-        </a>
-      </div>
-
-      <div className="admin-card">
-        <h2>Check a guest&apos;s status</h2>
-        <p className="sub" style={{ textAlign: 'left', marginBottom: 12 }}>
-          Search by name or email to see if they&apos;ve confirmed attendance and whether they&apos;ve
-          checked in.
-        </p>
-        <form onSubmit={handleStatusSearch} style={{ display: 'flex', gap: 8 }}>
+        <h2>Guest status</h2>
+        <form onSubmit={handleStatusSearch} style={{ display: 'flex', gap: 8, marginTop: 12 }}>
           <input
             type="text"
             placeholder="Name or email"
@@ -191,6 +131,55 @@ export default function AdminDashboard() {
             ))}
           </div>
         )}
+      </div>
+
+      <form onSubmit={handleImport} className="admin-card">
+        <h2>Import guest list</h2>
+        <input
+          type="file"
+          accept=".xlsx,.xls"
+          className="file-input"
+          style={{ marginTop: 12 }}
+          onChange={(e) => setFile(e.target.files[0] || null)}
+        />
+        {importError && <p className="error-text">{importError}</p>}
+        <button
+          type="submit"
+          className="btn btn-primary"
+          style={{ marginTop: 12 }}
+          disabled={importing}
+        >
+          {importing ? 'Importing...' : 'Import file'}
+        </button>
+        {importResult && (
+          <div className="admin-summary">
+            <p>
+              {importResult.added} added, {importResult.updated} updated, out of{' '}
+              {importResult.totalRows} rows.
+            </p>
+            {importResult.errors.length > 0 && (
+              <div>
+                <p className="error-line">{importResult.errors.length} row(s) had a problem:</p>
+                {importResult.errors.slice(0, 5).map((e, i) => (
+                  <p key={i} className="error-line">
+                    {e}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </form>
+
+      <div className="admin-card">
+        <h2>Export guest list</h2>
+        <a
+          href="/api/admin/export"
+          className="btn btn-primary"
+          style={{ display: 'block', textAlign: 'center', textDecoration: 'none', marginTop: 12 }}
+        >
+          Download excel file
+        </a>
       </div>
 
       <button className="btn btn-ghost" onClick={handleLogout} style={{ maxWidth: 420 }}>
