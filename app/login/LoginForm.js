@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function AdminLogin() {
+export default function LoginForm({ next }) {
   const router = useRouter();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -12,7 +12,7 @@ export default function AdminLogin() {
   async function handleSubmit(event) {
     event.preventDefault();
     if (!password) {
-      setError('Enter the admin password');
+      setError('Enter the password');
       return;
     }
     setError('');
@@ -28,6 +28,7 @@ export default function AdminLogin() {
         setError(data.error || 'Incorrect password');
         return;
       }
+      router.push(next || '/');
       router.refresh();
     } catch (err) {
       setError('Something went wrong, try again');
@@ -40,12 +41,11 @@ export default function AdminLogin() {
     <form onSubmit={handleSubmit} className="admin-card">
       <h2>Sign in</h2>
       <div className="field-group">
-        <label>Password</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Admin password"
+          placeholder="Password"
         />
       </div>
       {error && <p className="error-text">{error}</p>}

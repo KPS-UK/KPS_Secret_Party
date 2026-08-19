@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { checkPassword, getSessionToken } from '../../../../lib/auth';
+import { SESSION_MAX_AGE } from '../../../../lib/session';
 
 export async function POST(request) {
   const body = await request.json();
@@ -15,7 +16,7 @@ export async function POST(request) {
     secure: true,
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 8,
+    maxAge: SESSION_MAX_AGE,
   });
   return response;
 }

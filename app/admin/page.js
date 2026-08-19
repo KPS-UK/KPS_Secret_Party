@@ -1,13 +1,6 @@
-import { cookies } from 'next/headers';
-import { getSessionToken } from '../../lib/auth';
-import AdminLogin from './AdminLogin';
 import AdminDashboard from './AdminDashboard';
 
-export default async function AdminPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('kps_admin')?.value;
-  const authed = Boolean(token) && token === getSessionToken();
-
+export default function AdminPage() {
   return (
     <div className="page-scroll" style={{ alignItems: 'flex-start', paddingTop: 60 }}>
       <div className="rays" />
@@ -29,7 +22,7 @@ export default async function AdminPage() {
           <br />
           admin
         </h1>
-        {authed ? <AdminDashboard /> : <AdminLogin />}
+        <AdminDashboard />
       </div>
     </div>
   );

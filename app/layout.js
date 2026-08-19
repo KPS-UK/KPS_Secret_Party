@@ -1,4 +1,5 @@
 import './globals.css';
+import LogoutButton from './LogoutButton';
 
 export const metadata = {
   title: 'KPS Secret Party - check in',
@@ -15,7 +16,10 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <LogoutButton />
+        {children}
+      </body>
     </html>
   );
 }

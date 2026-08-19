@@ -1,10 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard() {
-  const router = useRouter();
   const [file, setFile] = useState(null);
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState(null);
@@ -43,11 +41,6 @@ export default function AdminDashboard() {
     } finally {
       setImporting(false);
     }
-  }
-
-  async function handleLogout() {
-    await fetch('/api/admin/logout', { method: 'POST' });
-    router.refresh();
   }
 
   async function handleStatusSearch(event) {
@@ -181,10 +174,6 @@ export default function AdminDashboard() {
           Download excel file
         </a>
       </div>
-
-      <button className="btn btn-ghost" onClick={handleLogout} style={{ maxWidth: 420 }}>
-        Sign out
-      </button>
     </>
   );
 }
