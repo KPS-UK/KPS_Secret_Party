@@ -436,18 +436,11 @@ export default function AdminDashboard() {
       <div className="admin-card">
         <h2>Export</h2>
         <a
-          href="/api/admin/export?filter=checked-in"
+          href="/api/admin/export"
           className="btn btn-primary"
           style={{ display: 'block', textAlign: 'center', textDecoration: 'none', marginTop: 12 }}
         >
-          Download checked-in list
-        </a>
-        <a
-          href="/api/admin/export"
-          className="btn btn-ghost"
-          style={{ display: 'block', textAlign: 'center', textDecoration: 'none', marginTop: 10 }}
-        >
-          Download full guest list with responses
+          Download guest list
         </a>
       </div>
 
