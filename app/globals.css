@@ -476,3 +476,72 @@ input:focus {
 .logout-btn:hover {
   border-color: var(--cyan);
 }
+
+.suggestion-item.suggestion-group {
+  border-color: var(--cyan);
+}
+
+.group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.group-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0;
+  padding: 12px 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  letter-spacing: 0;
+  color: var(--white);
+}
+
+.group-row.disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.group-row input[type='checkbox'] {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--magenta);
+}
+
+.group-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.group-info .name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.group-info .meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+/* Hide the scrollbar but keep scrolling working (touch, wheel, trackpad). */
+.screen-body,
+.page-scroll,
+.suggestion-list {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* older Edge */
+}
+
+.screen-body::-webkit-scrollbar,
+.page-scroll::-webkit-scrollbar,
+.suggestion-list::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari */
+}

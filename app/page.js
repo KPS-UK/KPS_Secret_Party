@@ -16,6 +16,12 @@ export default function CheckInPage() {
   const [welcomeName, setWelcomeName] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [matches, setMatches] = useState([]);
+  const [orgSuggestions, setOrgSuggestions] = useState([]);
+  const [orgMatches, setOrgMatches] = useState([]);
+  const [groupOrg, setGroupOrg] = useState('');
+  const [groupGuests, setGroupGuests] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [welcomeNames, setWelcomeNames] = useState([]);
 
   useEffect(() => {
     if (screen !== 'welcome') return;
@@ -31,6 +37,7 @@ export default function CheckInPage() {
     const value = searchValue.trim();
     if (value.length < 2) {
       setSuggestions([]);
+      setOrgSuggestions([]);
       return;
     }
     let cancelled = false;
@@ -40,9 +47,13 @@ export default function CheckInPage() {
         const data = await response.json();
         if (!cancelled) {
           setSuggestions(data.results || []);
+          setOrgSuggestions(data.orgs || []);
         }
       } catch (err) {
-        if (!cancelled) setSuggestions([]);
+        if (!cancelled) {
+          setSuggestions([]);
+          setOrgSuggestions([]);
+        }
       }
     }, 250);
     return () => {
@@ -55,7 +66,7 @@ export default function CheckInPage() {
     event.preventDefault();
     const value = searchValue.trim();
     if (!value) {
-      setSearchError('Enter your name to continue');
+      setSearchError('Enter your name or organisation to continue');
       return;
     }
     setSearchError('');
@@ -65,8 +76,25 @@ export default function CheckInPage() {
       const response = await fetch(`/api/guests/search?q=${encodeURIComponent(value)}`);
       const data = await response.json();
       const results = data.results || [];
+      const orgs = data.orgs || [];
+      // An organisation typed in full (its name or one of its alternate
+      // names) goes straight to its group list, even if a person's name also
+      // happens to match.
+      const exactOrgs = orgs.filter((o) => o.exact_match);
 
-      if (results.length === 0) {
+      if (exactOrgs.length === 1) {
+        await openGroup(exactOrgs[0].members, exactOrgs[0].organisation);
+      } else if (exactOrgs.length > 1) {
+        setOrgMatches(exactOrgs);
+        setFormError('');
+        setScreen('orgs');
+      } else if (results.length === 0 && orgs.length === 1) {
+        await openGroup(orgs[0].members, orgs[0].organisation);
+      } else if (results.length === 0 && orgs.length > 1) {
+        setOrgMatches(orgs);
+        setFormError('');
+        setScreen('orgs');
+      } else if (results.length === 0) {
         setForm({ ...EMPTY_FORM, name: value });
         setFormError('');
         setScreen('new');
@@ -151,10 +179,86 @@ export default function CheckInPage() {
     }
   }
 
+  // orgNames: every organisation record that makes up the company (more than
+  // one when alternate names have merged them). label: what to show as the title.
+  async function openGroup(orgNames, label) {
+    setSearchError('');
+    setFormError('');
+    setSubmitting(true);
+    setShowSuggestions(false);
+    try {
+      const query = orgNames.map((n) => `org=${encodeURIComponent(n)}`).join('&');
+      const response = await fetch(`/api/guests/search?${query}`);
+      const data = await response.json();
+      const guests = data.guests || [];
+      if (guests.length === 0) {
+        const message = 'No one found for that organisation';
+        setSearchError(message);
+        setFormError(message);
+        return;
+      }
+      setGroupOrg(label);
+      setGroupGuests(guests);
+      setSelectedIds([]);
+      setScreen('group');
+    } catch (err) {
+      const message = 'Something went wrong, try again';
+      setSearchError(message);
+      setFormError(message);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function toggleGuest(id) {
+    setSelectedIds((current) =>
+      current.includes(id) ? current.filter((x) => x !== id) : [...current, id]
+    );
+  }
+
+  function toggleSelectAll() {
+    const selectable = groupGuests.filter((g) => !g.attended).map((g) => g.id);
+    setSelectedIds((current) => (current.length === selectable.length ? [] : selectable));
+  }
+
+  async function handleGroupCheckin() {
+    if (selectedIds.length === 0) {
+      setFormError('Tick at least one person');
+      return;
+    }
+    setFormError('');
+    setSubmitting(true);
+    try {
+      const response = await fetch('/api/guests/group-checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setFormError(data.error || 'Something went wrong, try again');
+        return;
+      }
+      setWelcomeName('');
+      setWelcomeNames(data.names || []);
+      setScreen('welcome');
+    } catch (err) {
+      setFormError('Something went wrong, try again');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   function resetAndReturn() {
     setSearchValue('');
     setSearchError('');
     setMatches([]);
+    setOrgMatches([]);
+    setOrgSuggestions([]);
+    setGroupOrg('');
+    setGroupGuests([]);
+    setSelectedIds([]);
+    setWelcomeNames([]);
     setForm(EMPTY_FORM);
     setShowEdit(false);
     setFormError('');
@@ -167,6 +271,10 @@ export default function CheckInPage() {
     setFormError('');
     setScreen('new');
   }
+
+  // True when the open group combines people from more than one organisation
+  // record (merged by an alternate name), so rows should name their organisation.
+  const mixedOrgs = new Set(groupGuests.map((g) => (g.organisation || '').toLowerCase())).size > 1;
 
   return (
     <div className="page">
@@ -184,7 +292,7 @@ export default function CheckInPage() {
                 <input
                   type="text"
                   id="search-input"
-                  placeholder="Name"
+                  placeholder="Name or organisation"
                   autoComplete="off"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
@@ -192,8 +300,22 @@ export default function CheckInPage() {
                   onBlur={() => setShowSuggestions(false)}
                 />
                 {searchError && <p className="error-text">{searchError}</p>}
-                {showSuggestions && suggestions.length > 0 && (
+                {showSuggestions && (suggestions.length > 0 || orgSuggestions.length > 0) && (
                   <div className="suggestion-list">
+                    {orgSuggestions.map((org) => (
+                      <button
+                        key={`org-${org.organisation}`}
+                        type="button"
+                        className="suggestion-item suggestion-group"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => openGroup(org.members, org.organisation)}
+                      >
+                        <p className="name">Everyone at {org.organisation}</p>
+                        <p className="meta">
+                          {org.guest_count} {org.guest_count === 1 ? 'guest' : 'guests'}, check in together
+                        </p>
+                      </button>
+                    ))}
                     {suggestions.map((guest) => (
                       <button
                         key={guest.id}
@@ -251,6 +373,104 @@ export default function CheckInPage() {
             </div>
             <div className="screen-footer">
               <button className="btn btn-ghost" style={{ marginTop: 0 }} onClick={() => setScreen('search')}>
+                Back to search
+              </button>
+            </div>
+          </>
+        )}
+
+        {screen === 'orgs' && (
+          <>
+            <div className="screen-body">
+              <img src="/kps-logo.png" alt="KPS" className="logo-img" style={{ marginBottom: 18 }} />
+              <h1 className="headline" style={{ fontSize: 28 }}>
+                A few organisations
+                <br />
+                match
+              </h1>
+              <p className="sub" style={{ marginBottom: 20 }}>Tap yours to see your group</p>
+              <div className="match-list">
+                {orgMatches.map((org) => (
+                  <button
+                    key={org.organisation}
+                    className="match-item"
+                    onClick={() => openGroup(org.members, org.organisation)}
+                  >
+                    <p className="name">{org.organisation}</p>
+                    <p className="meta">
+                      {org.guest_count} {org.guest_count === 1 ? 'guest' : 'guests'}
+                    </p>
+                  </button>
+                ))}
+              </div>
+              {formError && <p className="error-text">{formError}</p>}
+              <p className="helper-link">
+                None of these?{' '}
+                <span onClick={() => goToNewGuest(searchValue)}>Register here</span>
+              </p>
+            </div>
+            <div className="screen-footer">
+              <button className="btn btn-ghost" style={{ marginTop: 0 }} onClick={() => setScreen('search')}>
+                Back to search
+              </button>
+            </div>
+          </>
+        )}
+
+        {screen === 'group' && (
+          <>
+            <div className="screen-body">
+              <img src="/kps-logo.png" alt="KPS" className="logo-img" style={{ marginBottom: 18 }} />
+              <h1 className="headline" style={{ fontSize: 28 }}>
+                Check in
+                <br />
+                your group
+              </h1>
+              <p className="sub">{groupOrg}</p>
+              {groupGuests.some((g) => !g.attended) && (
+                <p className="edit-toggle" onClick={toggleSelectAll}>
+                  {selectedIds.length === groupGuests.filter((g) => !g.attended).length
+                    ? 'Clear all'
+                    : 'Select all'}
+                </p>
+              )}
+              <div className="group-list">
+                {groupGuests.map((guest) => (
+                  <label key={guest.id} className={`group-row${guest.attended ? ' disabled' : ''}`}>
+                    <input
+                      type="checkbox"
+                      checked={guest.attended || selectedIds.includes(guest.id)}
+                      disabled={guest.attended}
+                      onChange={() => toggleGuest(guest.id)}
+                    />
+                    <span className="group-info">
+                      <span className="name">{guest.name}</span>
+                      <span className="meta">
+                        {guest.attended
+                          ? 'Already checked in'
+                          : [guest.role, mixedOrgs ? guest.organisation : '']
+                              .filter(Boolean)
+                              .join(' at ')}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+              {formError && <p className="error-text">{formError}</p>}
+            </div>
+            <div className="screen-footer">
+              <button
+                className="btn btn-primary"
+                onClick={handleGroupCheckin}
+                disabled={submitting || selectedIds.length === 0}
+              >
+                {submitting
+                  ? 'Checking in...'
+                  : selectedIds.length === 0
+                  ? 'Tick people to check in'
+                  : `Check in ${selectedIds.length} selected`}
+              </button>
+              <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setScreen('search')}>
                 Back to search
               </button>
             </div>
@@ -432,12 +652,20 @@ export default function CheckInPage() {
               <h1 className="headline" style={{ fontSize: 30 }}>
                 Welcome,
                 <br />
-                <span
-                  className="script"
-                  style={{ fontSize: 38, display: 'inline-block', padding: '18px 0 10px' }}
-                >
-                  {welcomeName || 'Guest'}
-                </span>
+                {welcomeNames.length > 0 ? (
+                  welcomeNames.map((n, i) => (
+                    <span key={`${n}-${i}`} className="script" style={{ fontSize: 30, padding: '8px 0' }}>
+                      {n}
+                    </span>
+                  ))
+                ) : (
+                  <span
+                    className="script"
+                    style={{ fontSize: 38, display: 'inline-block', padding: '18px 0 10px' }}
+                  >
+                    {welcomeName || 'Guest'}
+                  </span>
+                )}
               </h1>
               <p className="sub" style={{ fontSize: 20 }}>
                 Enjoy the party.

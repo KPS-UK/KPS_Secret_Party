@@ -37,7 +37,7 @@ export async function middleware(request) {
   const response = NextResponse.next();
   response.cookies.set('kps_admin', token, {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: SESSION_MAX_AGE,

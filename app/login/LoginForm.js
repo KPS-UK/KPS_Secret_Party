@@ -1,10 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function LoginForm({ next }) {
-  const router = useRouter();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -28,8 +26,10 @@ export default function LoginForm({ next }) {
         setError(data.error || 'Incorrect password');
         return;
       }
-      router.push(next || '/');
-      router.refresh();
+      // Full page load rather than a client-side navigation, so the browser
+      // sends the new cookie and the page renders from a clean state.
+      window.location.href = next || '/';
+      return;
     } catch (err) {
       setError('Something went wrong, try again');
     } finally {

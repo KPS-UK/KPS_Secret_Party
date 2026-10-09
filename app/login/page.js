@@ -9,7 +9,15 @@ export default async function LoginPage({ searchParams }) {
   const authed = Boolean(token) && token === getSessionToken();
 
   const params = await searchParams;
-  const next = params?.next || '/';
+  const requested = params?.next;
+  // Only allow paths inside this app (e.g. /admin), never another website.
+  const next =
+    typeof requested === 'string' &&
+    requested.startsWith('/') &&
+    !requested.startsWith('//') &&
+    !requested.startsWith('/\\')
+      ? requested
+      : '/';
 
   // Already signed in (e.g. cookie still valid, or they hit /login
   // directly out of habit) - no need to show the form again.

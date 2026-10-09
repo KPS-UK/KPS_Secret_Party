@@ -13,7 +13,7 @@ export async function POST(request) {
   const response = NextResponse.json({ ok: true });
   response.cookies.set('kps_admin', getSessionToken(), {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: SESSION_MAX_AGE,
