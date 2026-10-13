@@ -45,9 +45,10 @@ export async function middleware(request) {
   return response;
 }
 
-// Runs on everything except Next's own static/image assets and the
-// favicon. Add any other public static files (e.g. the KPS logo) here if
-// they stop loading on the login screen.
+// Runs on everything except Next's own static/image assets and the files the
+// login page needs before anyone can sign in: the tab icons and the KPS logo.
+// Add any other public static file here if it stops loading on the login
+// screen. (Anything not listed gets redirected to /login when signed out.)
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|kps-logo.png).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|icon.svg|kps-logo.png).*)'],
 };
